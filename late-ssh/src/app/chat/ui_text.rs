@@ -246,9 +246,13 @@ pub(super) fn wrap_message_to_lines(
         return lines;
     }
 
+    // Each rendered line is prefixed with a 1-column pad span, so the
+    // wrappable body width is the area width minus that pad.
+    let body_width = width.saturating_sub(1).max(1);
+
     let (reply_quote, body) = parse_reply_quote(body);
     if let Some(reply_quote) = reply_quote {
-        for row in wrap_plain_line(&format!("> {reply_quote}"), width) {
+        for row in wrap_plain_line(&format!("> {reply_quote}"), body_width) {
             lines.push(Line::from(vec![
                 pad.clone(),
                 Span::styled(row, Style::default().fg(theme::TEXT_FAINT)),
@@ -261,7 +265,7 @@ pub(super) fn wrap_message_to_lines(
             lines.push(Line::from(pad.clone()));
             continue;
         }
-        for chunk in wrap_plain_line(paragraph, width) {
+        for chunk in wrap_plain_line(paragraph, body_width) {
             let mut spans = vec![pad.clone()];
             spans.extend(mention_spans(&chunk, body_style));
             lines.push(Line::from(spans));
@@ -786,7 +790,7 @@ mod tests {
             "abcdefghij",
             "[1m]",
             "x",
-            5, // narrow width forces wrap
+            6, // area width 6, minus 1 pad = 5 body cols
             Style::default(),
             Style::default(),
             false,
