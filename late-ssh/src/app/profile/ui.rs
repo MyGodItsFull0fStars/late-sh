@@ -7,7 +7,7 @@ use ratatui::{
     widgets::Paragraph,
 };
 
-use crate::app::ai::ghost::GRAYBEARD_CHAT_INTERVAL;
+use crate::app::ai::ghost::{GRAYBEARD_CHAT_INTERVAL, GRAYBEARD_MENTION_COOLDOWN};
 use crate::app::common::theme;
 use late_core::models::leaderboard::BadgeTier;
 
@@ -337,12 +337,17 @@ fn build_lines<'a>(view: &ProfileRenderInput<'a>, width: u16) -> Vec<Line<'a>> {
     lines.push(section_heading("@graybeard"));
 
     let interval_min = GRAYBEARD_CHAT_INTERVAL.as_secs() / 60;
+    let mention_cooldown_sec = GRAYBEARD_MENTION_COOLDOWN.as_secs();
     lines.push(Line::from(Span::styled(
         "  One ghost user haunts #general — a burned-out dev who",
         dim,
     )));
     lines.push(Line::from(Span::styled(
         format!("  moans about the good old days (every ~{interval_min}min)."),
+        dim,
+    )));
+    lines.push(Line::from(Span::styled(
+        format!("  Replies when @mentioned ({mention_cooldown_sec}s cooldown)."),
         dim,
     )));
 

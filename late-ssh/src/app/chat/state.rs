@@ -1417,6 +1417,7 @@ fn chat_help_lines() -> Vec<String> {
         "  End                jump to most recent",
         "  g / G              clear selection (back to live view)",
         "  r                  reply to selected message",
+        "  e                  edit selected message",
         "  d                  delete selected message",
         "",
         "Compose",
