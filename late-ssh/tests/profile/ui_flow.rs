@@ -13,7 +13,8 @@ async fn profile_page_opens_and_closes_settings_modal() {
     wait_for_render_contains(&mut app, "Press Enter or e to edit profile settings").await;
 
     app.handle_input(b"\r");
-    wait_for_render_contains(&mut app, "Tune your identity").await;
+    wait_for_render_contains(&mut app, " Settings ").await;
+    wait_for_render_contains(&mut app, "Identity").await;
 
     app.handle_input(&[0x1B]);
     wait_for_render_contains(&mut app, "Press Enter or e to edit profile settings").await;
@@ -36,6 +37,7 @@ async fn profile_page_renders_saved_country_timezone_and_bio() {
             notify_kinds: vec!["dms".to_string()],
             notify_bell: true,
             notify_cooldown_mins: 5,
+            notify_format: None,
             theme_id: Some("late".to_string()),
             enable_background_color: false,
         },

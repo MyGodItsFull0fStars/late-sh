@@ -186,6 +186,10 @@ impl App {
             articles: self.chat.news.all_articles(),
             selected_index: self.chat.news.selected_index(),
         };
+        let discover_view = chat::discover::ui::DiscoverListView {
+            items: self.chat.discover.all_items(),
+            selected_index: self.chat.discover.selected_index(),
+        };
         let notifications_view = chat::notifications::ui::NotificationListView {
             items: self.chat.notifications.all_items(),
             selected_index: self.chat.notifications.selected_index(),
@@ -194,6 +198,8 @@ impl App {
             news_selected: self.chat.news_selected,
             news_unread_count: self.chat.news.unread_count(),
             news_view,
+            discover_selected: self.chat.discover_selected,
+            discover_view,
             rows_cache: &mut self.active_room_rows_cache,
             chat_rooms: self.chat.rooms.as_slice(),
             overlay: self.chat.overlay(),
@@ -335,7 +341,7 @@ impl App {
                 let payload = desktop_notification_bytes(
                     &notif.title,
                     &notif.body,
-                    self.notification_mode,
+                    NotificationMode::from_format(profile.notify_format.as_deref()),
                     profile.notify_bell,
                 );
                 self.pending_terminal_commands.push(payload);
